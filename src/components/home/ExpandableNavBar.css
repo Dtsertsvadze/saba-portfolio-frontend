@@ -14,15 +14,18 @@
   font-size: 30px;
   transform: translateX(100%);
   transition: transform 0.3s ease-in-out;
-  a {
-    text-decoration: none;
-    color: #333;
-    transition: all 0.3s ease-in-out;
-    &:hover {
-      color: #918484;
-    }
-  }
-  &.open {
-    transform: translateX(0);
-  }
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar-links a:hover {
+  color: #918484;
+}
+
+.navbar-links.open {
+  transform: translateX(0);
 }

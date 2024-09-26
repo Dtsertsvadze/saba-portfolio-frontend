@@ -8,7 +8,7 @@ const Login = () => {
     password: "",
   });
 
-  const baseUrl = "https://sabagorgodze.com";
+  const baseUrl = "https://api.sabagorgodze.com";
 
   const navigate = useNavigate();
 

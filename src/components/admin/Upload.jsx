@@ -9,7 +9,7 @@ const Upload = () => {
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
-  const baseUrl = "https://sabagorgodze.com";
+  const baseUrl = "https://api.sabagorgodze.com";
 
   useEffect(() => {
     const fetchCategories = async () => {

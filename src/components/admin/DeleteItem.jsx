@@ -6,7 +6,7 @@ const DeleteItemPage = () => {
   const navigate = useNavigate();
   const [item, setItem] = useState({ description: '', imagePath: '' });
 
-  const baseUrl = "https://sabagorgodze.com";
+  const baseUrl = "https://api.sabagorgodze.com";
 
   useEffect(() => {
     const fetchItem = async () => {

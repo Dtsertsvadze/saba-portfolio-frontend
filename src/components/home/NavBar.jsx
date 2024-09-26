@@ -13,7 +13,7 @@ const Sidebar = () => {
     fetchCategories();
   }, []);
 
-  const baseUrl = "https://sabagorgodze.com";
+  const baseUrl = "https://api.sabagorgodze.com";
 
   const fetchCategories = async () => {
     try {
@@ -40,9 +40,9 @@ const Sidebar = () => {
   return (
     <div className={`sidebar`}>
       <Link to={"/"} className="sidebar-header">SABA GORGODZE</Link>
-      <div className="burger-icon" onClick={toggleSidebar}>
+      <button className="burger-icon" onClick={toggleSidebar}>
         ☰
-      </div>
+      </button>
       <ExpandableNavBar isOpen={isOpen} onClick={toggleSidebar}/>
       <div className="projects-wrapper">
         {categories.map((project) => (

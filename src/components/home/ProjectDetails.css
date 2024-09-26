@@ -1,0 +1,137 @@
+.project-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  width: calc(100% - 200px);
+  max-width: 100%;
+  padding: 20px;
+  margin-left: 200px;
+  position: relative;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+.image-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  max-width: 1200px;
+  width: 100%;
+  transition: height 0.3s ease-in-out;
+}
+
+.image-grid.grid-view {
+  height: auto;
+}
+
+.image-grid.grid-view .project-image {
+  height: 220px;
+  width: auto;
+  margin: 2px;
+  object-fit: contain;
+}
+
+.image-grid.single-view .project-image {
+  max-height: 80%;
+  max-width: 90%;
+  object-fit: contain;
+  position: absolute;
+}
+
+.project-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.project-image.active {
+  opacity: 1 !important;
+}
+
+.nav-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+  z-index: 1;
+  transition: color 0.3s ease;
+  position: absolute;
+}
+
+.nav-button:hover {
+  color: #918484;
+}
+
+.grid-toggle-button {
+  position: absolute;
+  top: 25px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.grid-toggle-button:hover {
+  color: #918484;
+}
+
+.nav-button:focus {
+  outline: none;
+}
+
+.nav-button:first-of-type {
+  left: 10px;
+}
+
+.nav-button:last-of-type {
+  right: 10px;
+}
+
+@media (max-width: 1000px) {
+  .project-details {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 60px;
+  }
+
+  .grid-toggle-button {
+    top: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-details {
+    margin-top: 100px;
+    padding: 10px;
+  }
+
+  .grid-view{
+    width: 500px;
+    align-items: start;
+  }
+
+  .nav-button {
+    font-size: 1.5rem;
+  }
+  
+  .image-grid.grid-view .project-image {
+    height: auto;
+    width: 470px;
+  }
+
+
+  .grid-toggle-button {
+    font-size: 0.9rem;
+    display: none;
+  }
+}

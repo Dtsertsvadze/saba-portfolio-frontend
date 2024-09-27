@@ -59,6 +59,7 @@
 .admin-link {
   color: #333;
   text-decoration: none;
+  cursor: text;
 }
 
 @media (max-width: 1200px) {

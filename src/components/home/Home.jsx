@@ -11,7 +11,7 @@ const Home = () => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 767);
 
-  const baseUrl = "https://sabagorgodze.com";
+  const baseUrl = "https://api.sabagorgodze.com";
 
   useEffect(() => {
     const fetchHomeImages = async () => {

@@ -56,6 +56,11 @@
   text-align: justify;
 }
 
+.admin-link {
+  color: #333;
+  text-decoration: none;
+}
+
 @media (max-width: 1200px) {
   .about-container {
     padding: 20px;

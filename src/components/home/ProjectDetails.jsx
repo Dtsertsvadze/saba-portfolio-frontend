@@ -10,7 +10,7 @@ const ProjectDetails = () => {
   const [isGridView, setIsGridView] = useState(false);
   const { id } = useParams();
 
-  const baseUrl = "https://sabagorgodze.com";
+  const baseUrl = "https://api.sabagorgodze.com";
 
   useEffect(() => {
     const fetchProject = async () => {

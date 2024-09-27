@@ -2,6 +2,8 @@ import React from 'react';
 import './About.css';
 import profileImage from '../../assets/saba.jpg';
 
+import { Link } from 'react-router-dom';
+
 const About = () => {
   return (
     <div className="about-container">
@@ -18,7 +20,7 @@ const About = () => {
             His photographs are a blend of raw and naturally refined aesthetics, frequently obscuring the subject in favor of ideas and concepts expressed through lines and shadows. By choosing black and white, Gorgodze opens the door to a degree of abstraction, infusing his subjects with alternative meanings and forms, transforming them into unidentifiable yet familiar, and at times uncanny, visuals.
           </p>
           <p>
-            Introspection and personal growth are as crucial to Saba Gorgodze's creative process as capturing and revising images. He views himself as a conduit, constantly striving to maintain and expand his openness to seeing all that is to be seen and brought into focus. Through daily interactions with subjects and objects, Gorgodze accesses an unadulterated vision of the world around him, informing and sustaining his works.
+            Introspection and personal growth are as crucial to <Link to={"/admin"} className="admin-link">Saba Gorgodze's</Link> creative process as capturing and revising images. He views himself as a conduit, constantly striving to maintain and expand his openness to seeing all that is to be seen and brought into focus. Through daily interactions with subjects and objects, Gorgodze accesses an unadulterated vision of the world around him, informing and sustaining his works.
           </p>
         </div>
       </div>

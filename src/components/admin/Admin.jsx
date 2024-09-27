@@ -10,7 +10,7 @@ const AdminPanel = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const baseUrl = "https://api.sabagorgodze.com";
+  const baseUrl = "https://sabagorgodze.com";
 
   const checkTokenValidity = async () => {
     const token = localStorage.getItem("token");

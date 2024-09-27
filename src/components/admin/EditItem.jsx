@@ -9,7 +9,7 @@ const EditItemPage = () => {
   const [previewUrl, setPreviewUrl] = useState(""); // For handling image preview
 
 
-  const baseUrl = "https://api.sabagorgodze.com";
+  const baseUrl = "https://sabagorgodze.com";
   
   useEffect(() => {
     const fetchItem = async () => {

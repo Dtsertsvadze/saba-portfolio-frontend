@@ -11,7 +11,7 @@ const ExpandableNavBar = ({ isOpen, onClick }) => {
     fetchCategories();
   }, []);
 
-  const baseUrl = "https://api.sabagorgodze.com";
+  const baseUrl = "https://sabagorgodze.com";
 
   const fetchCategories = async () => {
     try {

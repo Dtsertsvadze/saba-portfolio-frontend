@@ -9,11 +9,11 @@ const Sidebar = () => {
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
+  const baseUrl = "https://api.sabagorgodze.com";
+
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  const baseUrl = "https://api.sabagorgodze.com";
 
   const fetchCategories = async () => {
     try {

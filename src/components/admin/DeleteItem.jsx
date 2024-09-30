@@ -5,7 +5,7 @@ const DeleteItemPage = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const [item, setItem] = useState({ description: '', imagePath: '' });
-
+  
   const baseUrl = "https://api.sabagorgodze.com";
 
   useEffect(() => {

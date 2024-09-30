@@ -39,7 +39,7 @@ const About = () => {
           <p>
             Introspection and personal growth are as crucial to{" "}
             <Link to={"/admin"} className="admin-link">
-              Saba Gorgodze's
+              Saba Gorgodze's{" "}
             </Link>
             creative process as capturing and revising images. He views himself
             as a conduit, constantly striving to maintain and expand his

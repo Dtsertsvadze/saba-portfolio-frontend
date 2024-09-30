@@ -9,7 +9,7 @@ const AdminPanel = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
+  
   const baseUrl = "https://api.sabagorgodze.com";
 
   const checkTokenValidity = async () => {

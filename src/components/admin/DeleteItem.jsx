@@ -7,7 +7,7 @@ const DeleteItemPage = () => {
   const [item, setItem] = useState({ description: "", imagePath: "" });
 
   const baseUrl = "https://api.sabagorgodze.com";
-  const CACHE_KEY = `delete_item_cache_${projectId}`;
+  const CACHE_KEY = `item_cache_${projectId}`;
   const CACHE_DURATION = 1000 * 60 * 60;
 
   const fetchItem = async () => {

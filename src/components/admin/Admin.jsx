@@ -12,7 +12,7 @@ const AdminPanel = () => {
   const navigate = useNavigate();
 
   const baseUrl = "https://api.sabagorgodze.com";
-  const CACHE_KEY = "admin_categories_cache";
+  const CACHE_KEY = "categories_cache";
   const CACHE_DURATION = 1000 * 60 * 60;
 
   const getAuthToken = useCallback(() => {

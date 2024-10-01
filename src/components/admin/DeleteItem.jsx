@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { invalidateAllCacheExceptToken } from "../utils/invalidateAllCacheExceptToken";
 
 const DeleteItemPage = () => {
   const { projectId } = useParams();
@@ -56,7 +57,7 @@ const DeleteItemPage = () => {
         },
       });
       if (!response.ok) throw new Error("Failed to delete item");
-      localStorage.removeItem(CACHE_KEY);
+      invalidateAllCacheExceptToken();
       navigate("/admin");
     } catch (error) {
       console.error("Error deleting item:", error);

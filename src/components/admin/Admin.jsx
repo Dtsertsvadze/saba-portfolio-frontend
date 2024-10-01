@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Item from "./Item";
 import "./Admin.css";
+import { invalidateAllCacheExceptToken } from "../utils/invalidateAllCacheExceptToken";
 
 const AdminPanel = () => {
   const [categories, setCategories] = useState([]);
@@ -144,7 +145,7 @@ const AdminPanel = () => {
       });
       if (!response.ok) throw new Error("Failed to add category");
       setNewCategoryName("");
-      invalidateCache();
+      invalidateAllCacheExceptToken();
       fetchCategories();
     } catch (error) {
       setError("Error adding category");
@@ -162,7 +163,7 @@ const AdminPanel = () => {
         },
       });
       if (!response.ok) throw new Error("Failed to delete category");
-      invalidateCache();
+      invalidateAllCacheExceptToken();
       fetchCategories();
     } catch (error) {
       setError("Error deleting category");
@@ -186,7 +187,7 @@ const AdminPanel = () => {
       );
       if (!response.ok) throw new Error("Failed to update category");
       setEditingCategory(null);
-      invalidateCache();
+      invalidateAllCacheExceptToken();
       fetchCategories();
     } catch (error) {
       setError("Error updating category");
@@ -204,7 +205,7 @@ const AdminPanel = () => {
   const logOutHandler = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
-    invalidateCache();
+    invalidateAllCacheExceptToken();
     navigate("/login");
   };
 

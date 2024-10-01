@@ -6,10 +6,10 @@
   min-height: 100vh;
   overflow: hidden;
   background-color: #f0f0f0;
-  width: calc(100% - 200px);
+  width: calc(100% - 240px);
   max-width: 100%;
   padding: 20px;
-  margin-left: 200px;
+  margin-left: 240px;
   position: relative;
   box-sizing: border-box;
   transition: all 0.3s ease-in-out;

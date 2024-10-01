@@ -1,7 +1,7 @@
 .form-wrapper {
-  width: calc(100vw - 200px);
+  width: calc(100vw - 240px);
   height: 100vh;
-  margin-left: 200px;
+  margin-left: 240px;
   display: flex;
   justify-content: center;
   align-items: center;

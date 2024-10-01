@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 200px;
+  width: 240px;
   height: 100vh;
   background-color: #f0f0f0;
   padding: 20px;
@@ -21,6 +21,7 @@
   cursor: pointer;
   text-decoration: none;
   color: #000;
+  width: 300px;
 }
 
 .project-link {

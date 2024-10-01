@@ -94,14 +94,12 @@ const AdminPanel = () => {
     try {
       setIsLoading(true);
 
-      // Try to get data from cache first
       const cachedCategories = getCachedData();
       if (cachedCategories) {
         setCategories(cachedCategories);
         setIsLoading(false);
       }
 
-      // Fetch fresh data
       const response = await fetch(`${baseUrl}/api/projects`, {
         headers: {
           "Content-Type": "application/json",

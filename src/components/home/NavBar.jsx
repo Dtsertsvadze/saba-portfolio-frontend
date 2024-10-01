@@ -11,12 +11,11 @@ const Sidebar = () => {
 
   const CACHE_KEY = "categories_cache";
   const CACHE_DURATION = 1000 * 60 * 60;
+  const baseUrl = "https://api.sabagorgodze.com";
 
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  const baseUrl = "https://api.sabagorgodze.com";
 
   const fetchCategories = async () => {
     try {

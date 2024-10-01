@@ -70,6 +70,7 @@ const Upload = () => {
 
       if (response.ok) {
         alert("Upload successful!");
+        localStorage.removeItem(CACHE_KEY);
         navigate("/admin");
       } else {
         alert("Failed to upload.");

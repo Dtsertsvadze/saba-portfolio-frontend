@@ -13,7 +13,7 @@ const Home = () => {
 
   const baseUrl = "https://api.sabagorgodze.com";
   const CACHE_KEY = "home_images_cache";
-  const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+  const CACHE_DURATION = 1000 * 60 * 60;
 
   const fetchHomeImages = async () => {
     try {

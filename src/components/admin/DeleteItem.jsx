@@ -56,6 +56,7 @@ const DeleteItemPage = () => {
         },
       });
       if (!response.ok) throw new Error("Failed to delete item");
+      localStorage.removeItem(CACHE_KEY);
       navigate("/admin");
     } catch (error) {
       console.error("Error deleting item:", error);

@@ -71,6 +71,7 @@ const EditItemPage = () => {
       );
       if (!response.ok) throw new Error("Failed to update item");
       console.log("Item updated successfully"); // Debugging log
+      localStorage.removeItem(CACHE_KEY);
       navigate("/admin");
     } catch (error) {
       console.error("Error updating item:", error);

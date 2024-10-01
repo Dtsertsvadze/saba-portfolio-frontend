@@ -9,14 +9,14 @@ const Sidebar = () => {
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
+
   const CACHE_KEY = "categories_cache";
   const CACHE_DURATION = 1000 * 60 * 60;
+  const baseUrl = "https://api.sabagorgodze.com";
 
   useEffect(() => {
     fetchCategories();
   }, []);
-
-  const baseUrl = "https://api.sabagorgodze.com";
 
   const fetchCategories = async () => {
     try {

@@ -11,26 +11,57 @@ const ProjectDetails = () => {
   const { id } = useParams();
 
   const baseUrl = "https://api.sabagorgodze.com";
+  const CACHE_KEY = `project_cache_${id}`;
+  const CACHE_DURATION = 1000 * 60 * 60;
+
+  const fetchProject = async () => {
+    try {
+      setLoading(true);
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        try {
+          const { data, timestamp } = JSON.parse(cachedData);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setProject(data);
+            setLoading(false);
+            return;
+          }
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+        }
+      }
+
+      const response = await fetch(`${baseUrl}/api/projects/${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch project details");
+      }
+      const data = await response.json();
+      setProject(data);
+
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data,
+          timestamp: Date.now(),
+        })
+      );
+    } catch (err) {
+      setError(err.message);
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        try {
+          const { data } = JSON.parse(cachedData);
+          setProject(data);
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `${baseUrl}/api/projects/${id}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch project details");
-        }
-        const data = await response.json();
-        setProject(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProject();
   }, [id]);
 

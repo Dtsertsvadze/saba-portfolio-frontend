@@ -12,34 +12,68 @@ const Home = () => {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 767);
 
   const baseUrl = "https://api.sabagorgodze.com";
+  const CACHE_KEY = "home_images_cache";
+  const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+
+  const fetchHomeImages = async () => {
+    try {
+      setIsLoading(true);
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        try {
+          const { data, timestamp } = JSON.parse(cachedData);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setImages(data);
+            setIsLoading(false);
+            return;
+          }
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+        }
+      }
+
+      const response = await fetch(`${baseUrl}/api/projects`);
+      if (!response.ok) throw new Error("Failed to fetch projects");
+      const projects = await response.json();
+
+      const homeProject = projects.find(
+        (project) => project.name.toLowerCase() === "home"
+      );
+      if (!homeProject) throw new Error("Home project not found");
+
+      const imagesResponse = await fetch(
+        `${baseUrl}/api/projects/${homeProject.id}`
+      );
+      if (!imagesResponse.ok) throw new Error("Failed to fetch images");
+      const imagesData = await imagesResponse.json();
+
+      setImages(imagesData.projects);
+
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data: imagesData.projects,
+          timestamp: Date.now(),
+        })
+      );
+    } catch (error) {
+      setError(error.message);
+
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        try {
+          const { data } = JSON.parse(cachedData);
+          setImages(data);
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+        }
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchHomeImages = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(`${baseUrl}/api/projects`);
-        if (!response.ok) throw new Error("Failed to fetch projects");
-        const projects = await response.json();
-
-        const homeProject = projects.find(
-          (project) => project.name.toLowerCase() === "home"
-        );
-        if (!homeProject) throw new Error("Home project not found");
-
-        const imagesResponse = await fetch(
-          `${baseUrl}/api/projects/${homeProject.id}`
-        );
-        if (!imagesResponse.ok) throw new Error("Failed to fetch images");
-        const imagesData = await imagesResponse.json();
-
-        setImages(imagesData.projects);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchHomeImages();
   }, []);
 

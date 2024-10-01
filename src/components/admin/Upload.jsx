@@ -10,21 +10,44 @@ const Upload = () => {
   const navigate = useNavigate();
 
   const baseUrl = "https://api.sabagorgodze.com";
+  const CACHE_KEY = "upload_categories_cache";
+  const CACHE_DURATION = 1000 * 60 * 60;
+
+  const fetchCategories = async () => {
+    try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        try {
+          const { data, timestamp } = JSON.parse(cachedData);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setCategories(data);
+            return;
+          }
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+        }
+      }
+
+      const response = await fetch(`${baseUrl}/api/projects`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories");
+      }
+      const data = await response.json();
+      setCategories(data);
+
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data,
+          timestamp: Date.now(),
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/api/projects`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
     fetchCategories();
   }, []);
 
@@ -66,7 +89,9 @@ const Upload = () => {
       <h2 className="upload-title">Upload Image</h2>
       <form className="upload-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label" htmlFor="description">Description:</label>
+          <label className="form-label" htmlFor="description">
+            Description:
+          </label>
           <input
             className="form-input"
             id="description"
@@ -77,7 +102,9 @@ const Upload = () => {
           />
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="categoryId">Category:</label>
+          <label className="form-label" htmlFor="categoryId">
+            Category:
+          </label>
           <select
             className="form-select"
             id="categoryId"
@@ -94,7 +121,9 @@ const Upload = () => {
           </select>
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="image">Image:</label>
+          <label className="form-label" htmlFor="image">
+            Image:
+          </label>
           <input
             className="form-input"
             id="image"
@@ -104,8 +133,12 @@ const Upload = () => {
           />
         </div>
         <div className="action-buttons">
-            <button className="upload-button" type="submit">Upload</button>
-            <Link to="/admin" className="back-button" type="submit">Back to Admin Panel</Link>
+          <button className="upload-button" type="submit">
+            Upload
+          </button>
+          <Link to="/admin" className="back-button" type="submit">
+            Back to Admin Panel
+          </Link>
         </div>
       </form>
     </div>

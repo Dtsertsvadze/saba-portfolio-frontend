@@ -11,10 +11,25 @@ const ExpandableNavBar = ({ isOpen, onClick }) => {
     fetchCategories();
   }, []);
 
+  const CACHE_KEY = "categories_cache";
+  const CACHE_DURATION = 1000 * 60 * 60;
   const baseUrl = "https://api.sabagorgodze.com";
 
   const fetchCategories = async () => {
     try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        try {
+          const { data, timestamp } = JSON.parse(cachedData);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setCategories(data);
+            return;
+          }
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+        }
+      }
+
       const response = await fetch(`${baseUrl}/api/projects`);
       if (!response.ok) throw new Error("Failed to fetch categories");
       const data = await response.json();
@@ -27,9 +42,27 @@ const ExpandableNavBar = ({ isOpen, onClick }) => {
         data.unshift(homeCategory);
       }
 
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data,
+          timestamp: Date.now(),
+        })
+      );
+
       setCategories(data);
     } catch (error) {
       setError("Error fetching categories");
+
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        try {
+          const { data } = JSON.parse(cachedData);
+          setCategories(data);
+        } catch (e) {
+          console.error("Failed to parse cached data", e);
+        }
+      }
     }
   };
 
@@ -37,7 +70,11 @@ const ExpandableNavBar = ({ isOpen, onClick }) => {
     <div className={`navbar-links ${isOpen ? "open" : ""}`}>
       {categories.map((category) => (
         <Link
-          to={category.name.toLowerCase() === "home" ? "/" : `/project/${category.id}`}
+          to={
+            category.name.toLowerCase() === "home"
+              ? "/"
+              : `/project/${category.id}`
+          }
           key={category.id}
           className="nav-link"
           onClick={onClick}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Item from "./Item";
 import "./Admin.css";
@@ -8,16 +8,60 @@ const AdminPanel = () => {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [editingCategory, setEditingCategory] = useState(null);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  
-  const baseUrl = "https://api.sabagorgodze.com";
 
-  const checkTokenValidity = async () => {
-    const token = localStorage.getItem("token");
+  const baseUrl = "https://api.sabagorgodze.com";
+  const CACHE_KEY = "admin_categories_cache";
+  const CACHE_DURATION = 1000 * 60 * 60;
+
+  const getAuthToken = useCallback(() => {
+    return localStorage.getItem("token");
+  }, []);
+
+  const getCachedData = useCallback(() => {
+    try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (!cachedData) return null;
+
+      const { data, timestamp } = JSON.parse(cachedData);
+      if (Date.now() - timestamp < CACHE_DURATION) {
+        return data;
+      }
+    } catch (e) {
+      console.error("Failed to parse cached data", e);
+    }
+    return null;
+  }, []);
+
+  const setCachedData = useCallback((data) => {
+    try {
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data,
+          timestamp: Date.now(),
+        })
+      );
+    } catch (e) {
+      console.error("Failed to set cache", e);
+    }
+  }, []);
+
+  const invalidateCache = useCallback(() => {
+    try {
+      localStorage.removeItem(CACHE_KEY);
+    } catch (e) {
+      console.error("Failed to invalidate cache", e);
+    }
+  }, []);
+
+  const checkTokenValidity = useCallback(async () => {
+    const token = getAuthToken();
 
     if (!token) {
       navigate("/login");
-      return;
+      return false;
     }
 
     try {
@@ -32,45 +76,65 @@ const AdminPanel = () => {
         throw new Error("Token is invalid or expired");
       }
 
-      const data = await response.json();
-      console.log("Token is valid:", data);
+      return true;
     } catch (error) {
       console.error(error);
       navigate("/login");
+      return false;
     }
-  };
+  }, [navigate, getAuthToken]);
 
-  useEffect(() => {
-    checkTokenValidity();
-  }, []);
+  const fetchCategories = useCallback(async () => {
+    const token = getAuthToken();
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
-  const fetchCategories = async (token) => {
     try {
+      setIsLoading(true);
+
+      // Try to get data from cache first
+      const cachedCategories = getCachedData();
+      if (cachedCategories) {
+        setCategories(cachedCategories);
+        setIsLoading(false);
+      }
+
+      // Fetch fresh data
       const response = await fetch(`${baseUrl}/api/projects`, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
+
       if (!response.ok) throw new Error("Failed to fetch categories");
       const data = await response.json();
+
       setCategories(data);
+      setCachedData(data);
     } catch (error) {
       setError("Error fetching categories");
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [navigate, getAuthToken, getCachedData, setCachedData]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetchCategories(token);
-    } else {
-      navigate("/login");
-    }
-  }, [navigate]);
+    const initializeAdminPanel = async () => {
+      const isValid = await checkTokenValidity();
+      if (isValid) {
+        fetchCategories();
+      }
+    };
+
+    initializeAdminPanel();
+  }, [checkTokenValidity, fetchCategories]);
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
+    const token = getAuthToken();
     try {
       const response = await fetch(`${baseUrl}/api/projects`, {
         method: "POST",
@@ -82,14 +146,15 @@ const AdminPanel = () => {
       });
       if (!response.ok) throw new Error("Failed to add category");
       setNewCategoryName("");
-      fetchCategories(token);
+      invalidateCache();
+      fetchCategories();
     } catch (error) {
       setError("Error adding category");
     }
   };
 
   const handleDeleteCategory = async (id) => {
-    const token = localStorage.getItem("token");
+    const token = getAuthToken();
     try {
       const response = await fetch(`${baseUrl}/api/projects/${id}`, {
         method: "DELETE",
@@ -99,8 +164,8 @@ const AdminPanel = () => {
         },
       });
       if (!response.ok) throw new Error("Failed to delete category");
-      fetchCategories(token);
-      navigate("/admin");
+      invalidateCache();
+      fetchCategories();
     } catch (error) {
       setError("Error deleting category");
     }
@@ -108,7 +173,7 @@ const AdminPanel = () => {
 
   const handleEditCategory = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
+    const token = getAuthToken();
     try {
       const response = await fetch(
         `${baseUrl}/api/projects/${editingCategory.id}`,
@@ -123,7 +188,8 @@ const AdminPanel = () => {
       );
       if (!response.ok) throw new Error("Failed to update category");
       setEditingCategory(null);
-      fetchCategories(token);
+      invalidateCache();
+      fetchCategories();
     } catch (error) {
       setError("Error updating category");
     }
@@ -140,8 +206,13 @@ const AdminPanel = () => {
   const logOutHandler = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
+    invalidateCache();
     navigate("/login");
   };
+
+  if (isLoading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div className="admin-panel">

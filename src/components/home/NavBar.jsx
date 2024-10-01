@@ -9,6 +9,9 @@ const Sidebar = () => {
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
+  const CACHE_KEY = "categories_cache";
+  const CACHE_DURATION = 1000 * 60 * 60;
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -17,22 +20,47 @@ const Sidebar = () => {
 
   const fetchCategories = async () => {
     try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        const { data, timestamp } = JSON.parse(cachedData);
+        if (Date.now() - timestamp < CACHE_DURATION) {
+          setCategories(data);
+          return;
+        }
+      }
       const response = await fetch(`${baseUrl}/api/projects`);
       if (!response.ok) throw new Error("Failed to fetch categories");
       const data = await response.json();
 
-      const homeCategoryIndex = data.findIndex(
-        (category) => category.name.toLowerCase() === "home"
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          data,
+          timestamp: Date.now(),
+        })
       );
-      if (homeCategoryIndex !== -1) {
-        const [homeCategory] = data.splice(homeCategoryIndex, 1);
-        data.unshift(homeCategory);
-      }
 
-      setCategories(data);
+      setCategories(sortCategories(data));
     } catch (error) {
       setError("Error fetching categories");
+
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        const { data } = JSON.parse(cachedData);
+        setCategories(sortCategories(data));
+      }
     }
+  };
+
+  const sortCategories = (data) => {
+    const homeCategoryIndex = data.findIndex(
+      (category) => category.name.toLowerCase() === "home"
+    );
+    if (homeCategoryIndex !== -1) {
+      const [homeCategory] = data.splice(homeCategoryIndex, 1);
+      return [homeCategory, ...data];
+    }
+    return data;
   };
 
   const toggleSidebar = () => {

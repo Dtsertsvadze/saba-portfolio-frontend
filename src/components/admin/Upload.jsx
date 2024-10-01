@@ -10,7 +10,7 @@ const Upload = () => {
   const navigate = useNavigate();
 
   const baseUrl = "https://api.sabagorgodze.com";
-  const CACHE_KEY = "upload_categories_cache";
+  const CACHE_KEY = "categories_cache";
   const CACHE_DURATION = 1000 * 60 * 60;
 
   const fetchCategories = async () => {

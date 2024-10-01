@@ -9,7 +9,7 @@ const EditItemPage = () => {
   const [previewUrl, setPreviewUrl] = useState(""); // For handling image preview
 
   const baseUrl = "https://api.sabagorgodze.com";
-  const CACHE_KEY = `edit_item_cache_${projectId}`;
+  const CACHE_KEY = `item_cache_${projectId}`;
   const CACHE_DURATION = 1000 * 60 * 60;
 
   const fetchItem = async () => {

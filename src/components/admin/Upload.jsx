@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Upload.css";
 import { Link, useNavigate } from "react-router-dom";
+import { invalidateAllCacheExceptToken } from "../utils/invalidateAllCacheExceptToken";
 
 const Upload = () => {
   const [description, setDescription] = useState("");
@@ -71,8 +72,7 @@ const Upload = () => {
 
       if (response.ok) {
         alert("Upload successful!");
-        localStorage.removeItem(CACHE_KEY);
-        localStorage.removeItem("home_images_cache");
+        invalidateAllCacheExceptToken();
         navigate("/admin");
       } else {
         alert("Failed to upload.");

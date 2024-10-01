@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { invalidateAllCacheExceptToken } from "../utils/invalidateAllCacheExceptToken";
 
 const EditItemPage = () => {
   const { projectId } = useParams();
@@ -71,7 +72,7 @@ const EditItemPage = () => {
       );
       if (!response.ok) throw new Error("Failed to update item");
       console.log("Item updated successfully"); // Debugging log
-      localStorage.removeItem(CACHE_KEY);
+      invalidateAllCacheExceptToken();
       navigate("/admin");
     } catch (error) {
       console.error("Error updating item:", error);

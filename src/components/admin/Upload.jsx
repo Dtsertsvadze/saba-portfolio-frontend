@@ -11,6 +11,7 @@ const Upload = () => {
 
   const baseUrl = "https://api.sabagorgodze.com";
   const CACHE_KEY = "categories_cache";
+
   const CACHE_DURATION = 1000 * 60 * 60;
 
   const fetchCategories = async () => {
@@ -71,6 +72,7 @@ const Upload = () => {
       if (response.ok) {
         alert("Upload successful!");
         localStorage.removeItem(CACHE_KEY);
+        localStorage.removeItem("home_images_cache");
         navigate("/admin");
       } else {
         alert("Failed to upload.");
